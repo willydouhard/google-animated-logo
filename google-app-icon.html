@@ -31,6 +31,10 @@ class GoogleAppIcon extends AnimationComputations {
 				type: Number,
 				value: 0
 			},
+			delay: {
+				type: Number,
+				value: 0
+			},
 			step: {
 				type: Number,
 				value: 24
@@ -46,7 +50,7 @@ class GoogleAppIcon extends AnimationComputations {
 			},
 			animationDelay: {
 				type: Number,
-				computed: '_computeAnimationDelay(index)'
+				computed: '_computeAnimationDelay(delay)'
 			},
 			animationStart: {
 				type: Number,
@@ -91,8 +95,8 @@ class GoogleAppIcon extends AnimationComputations {
 		return -(iconOffset * step);
 	}
 
-	_computeAnimationDelay(index) {
-		return 100 * index;
+	_computeAnimationDelay(delay) {
+		return 100 * delay;
 	}
 
 	_setOffset(xOffset) {

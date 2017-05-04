@@ -97,6 +97,7 @@ Remade for fun the new google logo animation (google sign in) for chrome
                         animation-duration="[[animationDuration]]"
                         first="[[_isFirst(index)]]"
                         last="[[_isLast(index)]]"
+                        delay="[[item.delay]]"
                         icon-offset="[[item.offset]]"
                         on-entrance-done="_animate"
                         on-synchronize-animations="_sync"
@@ -119,7 +120,7 @@ class GoogleAnimatedLogo extends Polymer.Element {
             return {
                   sequence: {
                         type: Array,
-                        value: [{id: 'g0', offset: 2}, {id: 'o1', offset: 1}, {id: 'o2', offset: 3}, {id: 'g3', offset: 4}, {id: 'e5', offset: 0}]
+                        value: [{id: 'g0', offset: 2, delay: 0}, {id: 'o1', offset: 1, delay: 1}, {id: 'o2', offset: 3, delay: 2}, {id: 'g3', offset: 4, delay: 3}, {id: 'e5', offset: 0, delay: 5}]
                   },
                   running: {
                         type: Boolean,
