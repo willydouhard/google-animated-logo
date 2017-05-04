@@ -1,0 +1,168 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-slider/paper-slider.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+
+<link rel="import" href="google-app-icon.html">
+<link rel="import" href="google-svg-logo.html">
+
+<!--
+`google-animated-logo`
+Remade for fun the new google logo animation (google sign in) for chrome
+
+@demo demo/index.html
+-->
+
+<dom-module id="google-animated-logo">
+      <template>
+      <style>
+      :host {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+      }
+
+      #animationContainer {
+            width: 230px;
+            height: 50px;
+            position: relative;
+            margin: 50px 0;
+      }
+
+      #iconContainer {
+            display: flex;
+            justify-content: space-between;
+      }
+
+      google-svg-logo, #iconContainer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+      }
+
+      #reset {
+            opacity: 0;
+            transition: opacity 300ms ease, transform 300ms ease;
+            will-change: opacity;
+            width: 50px;
+            height: 50px;
+            color: var(--paper-blue-500);
+      }
+
+      #duration {
+            opacity: 0;
+            transition: opacity 300ms ease, transform 300ms ease;
+            will-change: opacity;
+            transform: translateY(-30px);
+      }
+
+      #duration > paper-slider {
+            width: 100%;
+            --paper-slider-container-color: grey;
+            --paper-slider-font-color: var(--paper-blue-500);
+            --paper-slider-knob-start-color: var(--paper-light-blue-500);
+            --paper-slider-knob-color: var(--paper-light-blue-500);
+            --paper-slider-active-color: var(--paper-light-blue-500);
+      }
+
+      #reset[show] {
+            transform: rotate(360deg);
+      }
+
+      #duration[show] {
+            transform: translateY(0);
+      }
+
+      [show] {
+            opacity: 1 !important;
+      }
+      </style>
+
+      <div id="duration" show$="[[!running]]">
+            <paper-slider step="1" pin value="{{animationDuration}}" min="300" max="5000"></paper-slider>
+            <div>Animation duration per letter (ms)</div>
+      </div>
+
+      <div id="animationContainer">
+            <google-svg-logo id="svg" bcrs="{{logoBcrs}}" animation-duration="[[animationDuration]]"></google-svg-logo>
+
+            <div id="iconContainer">
+                  <template is="dom-repeat" items="[[sequence]]">
+                        <google-app-icon
+                        id="[[item.id]]"
+                        index="[[index]]"
+                        animation-duration="[[animationDuration]]"
+                        first="[[_isFirst(index)]]"
+                        last="[[_isLast(index)]]"
+                        icon-offset="[[item.offset]]"
+                        on-entrance-done="_animate"
+                        on-synchronize-animations="_sync"
+                        ></google-app-icon>
+                  </template>
+            </div>
+      </div>
+
+      <paper-icon-button show$="[[!running]]" id="reset" on-click="reset" icon="icons:refresh"></paper-icon-button>
+
+</template>
+
+<script>
+
+'use strict';
+
+class GoogleAnimatedLogo extends Polymer.Element {
+      static get is() { return 'google-animated-logo'; }
+      static get properties() {
+            return {
+                  sequence: {
+                        type: Array,
+                        value: [{id: 'g0', offset: 2}, {id: 'o1', offset: 1}, {id: 'o2', offset: 3}, {id: 'g3', offset: 4}, {id: 'e5', offset: 0}]
+                  },
+                  running: {
+                        type: Boolean,
+                        value: true
+                  },
+                  animationDuration: {
+                        type: Number,
+                        value: 400
+                  }
+            };
+      }
+
+      get icons() {
+            if(!this._icons) this._icons = Array.from(this.shadowRoot.querySelector('#iconContainer').querySelectorAll('google-app-icon'));
+            return this._icons;
+      }
+
+      _animate(e) {
+            if(e.target.index !== this.sequence.length - 1) return;
+            this.icons.forEach( (icon, index) => icon.setupAnimation( this.logoBcrs.get(icon.id) ));
+      }
+
+      _isFirst(index) {
+            return index === 0;
+      }
+
+      _isLast(index) {
+            return index === this.sequence.length - 1;
+      }
+
+      _sync(e) {
+            this.$.svg.synchronize(e);
+            if(e.detail.last && e.detail.done) this.running = false;
+      }
+
+      reset() {
+            if(this.running) return;
+            this.running = true;
+            this.$.svg.reset();
+            this.icons.forEach( icon => icon.init());
+      }
+}
+
+window.customElements.define(GoogleAnimatedLogo.is, GoogleAnimatedLogo);
+</script>
+</dom-module>
