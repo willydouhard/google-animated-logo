@@ -1,0 +1,153 @@
+<link rel="import" href="animation-computations.html">
+<link rel="import" href="cubic-bezier.html">
+
+<dom-module id="google-app-icon">
+	<template>
+	<style>
+	:host {
+		display: block;
+		width: 24px;
+		height: 24px;
+		background-image:url(data:image/png;base64,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);
+		background-size: 144px 24px;
+		will-change: transform;
+	}
+	</style>
+</template>
+
+
+<script>
+'use strict';
+
+class GoogleAppIcon extends AnimationComputations {
+	static get is() { return 'google-app-icon'; }
+	static get properties() {
+		return {
+			index: {
+				type: Number,
+				value: 0
+			},
+			iconOffset: {
+				type: Number,
+				value: 0
+			},
+			delay: {
+				type: Number,
+				value: 0
+			},
+			step: {
+				type: Number,
+				value: 24
+			},
+			xOffset: {
+				type: Number,
+				computed: '_computeXOffset(iconOffset, step)',
+				observer: '_setOffset'
+			},
+			entranceDuration: {
+				type: Number,
+				value: 250
+			},
+			animationDelay: {
+				type: Number,
+				computed: '_computeAnimationDelay(delay)'
+			},
+			animationStart: {
+				type: Number,
+				value: -Infinity
+			},
+			bcr: {
+				type: Object
+			},
+			yClimax: {
+				type: Number,
+				value: 30
+			}
+		};
+	}
+
+	connectedCallback() {
+		super.connectedCallback();
+		if(this.last) this.animationDuration *= 1.5;
+		this.init();
+	}
+
+	init() {
+		this.style.transform = `translateX(100%)`;
+		this.style.opacity = 0;
+		Polymer.RenderStatus.afterNextRender(this, ()=> {
+			this.style.transition = `transform ${this.entranceDuration}ms ease ${this.entranceDuration * this.index}ms, opacity ${this.entranceDuration}ms ease ${this.entranceDuration * this.index}ms`;
+			this.addEventListener('transitionend', this._onEntranceFinish);
+			this.style.transform = `translateX(0%)`;
+			this.style.opacity = 1;
+		})
+	}
+
+	_onEntranceFinish() {
+		this.bcr = this.getBoundingClientRect();
+		this.removeEventListener('transitionend', this._onEntranceFinish);
+		this.style.transition = 'none';
+		this.style.transitionDelay = 'none';
+		this.dispatchEvent(new CustomEvent('entrance-done'));
+	}
+
+	_computeXOffset(iconOffset, step) {
+		return -(iconOffset * step);
+	}
+
+	_computeAnimationDelay(delay) {
+		return 100 * delay;
+	}
+
+	_setOffset(xOffset) {
+		this.style.backgroundPosition = `${xOffset}px 0px`;
+	}
+
+	setupAnimation(target) {
+		this.animationConfig = this._computeAnimationConfig(target, this.bcr, this.index);
+		this.animationStart = -Infinity;
+		setTimeout(()=> {
+			requestAnimationFrame(this._animate.bind(this));
+		}, this.animationDelay);
+	}
+
+	_animate(timestamp) {
+		let progress = 0;
+
+		if (this.animationStart < 0) {
+			this.animationStart = timestamp;
+		} else {
+			progress = Math.min(1, (timestamp - this.animationStart)/this.animationDuration);
+		}
+
+		const x = this._computeX(progress);
+		const y = this._computeY(progress);
+
+		let scale, opacity;
+		opacity = scale = 1 - progress;
+
+		this.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+		this.style.opacity = opacity;
+
+		if(progress < 1) {
+			this.dispatchEvent(new CustomEvent('synchronize-animations', {
+				detail: {
+					x, y,
+					xDelta: this.animationConfig.xDelta, yDelta: this.animationConfig.yDelta,
+					progress,
+					target: this.animationConfig.target,
+					source: this.bcr,
+					last: this.last,
+					done: false
+				}
+			}));
+			requestAnimationFrame(this._animate.bind(this));
+		} else {
+			this.dispatchEvent(new CustomEvent('synchronize-animations', {detail: {last: this.last, done: true}}));
+		}
+	}
+}
+
+window.customElements.define(GoogleAppIcon.is, GoogleAppIcon);
+</script>
+</dom-module>

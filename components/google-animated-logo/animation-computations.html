@@ -1,0 +1,48 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+'use strict';
+
+class AnimationComputations extends Polymer.Element {
+	static get is() { return 'animation-computations'; }
+	static get properties() {
+		return {
+			animationConfig: {
+				type: Object
+			}
+		};
+	}
+
+	_computeDeltas(target, source) {
+		const xTarget = target.left + target.width / 2;
+		const yTarget = target.top + target.height / 2;
+		const xCurr = source.left + source.width / 2;
+		const yCurr = source.top + source.height / 2;
+
+		const xDelta = xTarget - xCurr;
+		const yDelta = yTarget - yCurr;
+
+		return {xCurr, yCurr, xTarget, yTarget, xDelta, yDelta};
+	}
+
+	_computeAnimationConfig(target, source, index) {
+		const easing = new CubicBezier(0.25, 0.1, 0.25 + 0.05 * index, 1.0);
+		const deltas = this._computeDeltas(target, source);
+		return Object.assign(deltas, {easing, target});
+	}
+
+	_computeX(progress) {
+		return this.animationConfig.xDelta * this.animationConfig.easing.getTiming(progress);
+	}
+
+	_computeY(progress) {
+		if(this.first) return this.animationConfig.yDelta * this.animationConfig.easing.getTiming(progress);
+		else if(progress <= 0.5) return this.yClimax * this.animationConfig.easing.getTiming(progress * 2);
+		else {
+			const currY = this.animationConfig.yCurr + this.yClimax;
+			return this.yClimax - ( (currY - this.animationConfig.yTarget) * this.animationConfig.easing.getTiming( (progress - 0.5) * 2 ) );
+		}
+	}
+}
+
+</script>
